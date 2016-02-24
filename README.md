@@ -82,6 +82,22 @@ You may opt to disable the default configuration and do everything from scratch:
 
 (Here the options hash must contain all options required to run ProFTPD.)
 
+In some cases you need to configure proftpd with local users in AuthUserFile
+
+    $accounts = undef # If you want module just create an empty file and let yourself to manage the content
+    $accounts = { 'myuser' => { 'uid' => 1234, 'gid' => '1234', 'home' => '/home/myuser/public_ftp/' } }
+    class { 'proftpd':
+      anonymous_enable => false,
+      options          => {
+        'ROOT' => {
+          'AuthUserFile' => '/etc/proftpd/proftpd.passwd',
+          'AuthOrder'    => 'mod_auth_file.c',
+        },
+      },
+      auth_users        => $accounts
+    }
+
+
 ### Using Hiera
 
 You're encouraged to define your configuration using Hiera, especially if you plan to disable the default configuration:
@@ -191,6 +207,7 @@ You may want to use the `$options` parameter to overwrite default configuration 
 * `scoreboardfile`: Path and name of the ScoreboardFile for the ProFTPD service.
 * `user`: Set the user under which the server will run.
 * `group`: Set the group under which the server will run.
+# `auth_users`: If config option ROOT[AuthUserFile] is defined, undef value will create empty file, hash will manage users in the file
 
 ## Limitations
 

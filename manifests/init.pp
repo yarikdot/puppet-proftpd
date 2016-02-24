@@ -29,6 +29,7 @@ class proftpd (
   $default_options    = $::proftpd::params::default_options,
   $load_modules       = $::proftpd::params::load_modules,
   $options            = $::proftpd::params::options,
+  $auth_users         = $::proftpd::params::auth_users,
 ) inherits proftpd::params {
 
   include stdlib
@@ -49,6 +50,7 @@ class proftpd (
   validate_string($service_name)
   validate_bool($service_enable)
   validate_string($service_ensure)
+  if $auth_users != undef { validate_hash($auth_users) }
 
   # resource relationships
   class { '::proftpd::install': } ->

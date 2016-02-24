@@ -37,12 +37,22 @@ class proftpd::config {
         }
       }
     }
-    if $real_options['ROOT']['AuthGroupFile'] {
-      if !defined(File["${real_options['ROOT']['AuthGroupFile']}"]) {
-        file { "${real_options['ROOT']['AuthGroupFile']}":
-          ensure => present,
-          mode   => '0600',
+    # Manage AuthUserFile is present
+    if $real_options[ROOT][AuthUserFile] {
+      if $::proftpd::auth_users == undef or count($::proftpd::auth_users) == 0{
+        file { "${real_options[ROOT][AuthUserFile]}":
+          ensure  => present,
+          mode    => 0600,
         }
+      } else {
+        concat { $real_options[ROOT][AuthUserFile]:
+          owner => 'root',
+          group => 'root',
+          mode  => '0600',
+          # accounts may be required for validate_cmd to succeed
+          before => File[$::proftpd::config],
+        }
+        create_resources(proftpd::account, $::proftpd::auth_users, { file => $real_options[ROOT][AuthUserFile] })
       }
     }
 

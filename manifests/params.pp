@@ -16,6 +16,7 @@ class proftpd::params {
   $service_manage     = true
   $service_enable     = true
   $service_ensure     = 'running'
+  $auth_users         = undef
 
   case $::osfamily {
     'Debian': {
