@@ -93,7 +93,7 @@ class proftpd::config {
     }
 
     concat::fragment { 'proftp_modules_header':
-      ensure  => present,
+#      ensure  => present, <-- Warning "The $ensure parameter to concat::fragment is deprecated and has no effect." removed.
       target  => "${::proftpd::base_dir}/modules.conf",
       content => "# File is managed by Puppet\n",
       order   => '01',
