@@ -29,21 +29,21 @@ class proftpd::config {
 
     # Manage AuthUserFile if present
     # XXX: may be found in server config, <VirtualHost>, <Global>
-    if $real_options[ROOT][AuthUserFile] {
+    if $real_options['ROOT']['AuthUserFile'] {
       if $::proftpd::auth_users == undef or count($::proftpd::auth_users) == 0{
-        file { "${real_options[ROOT][AuthUserFile]}":
+        file { "${real_options['ROOT']['AuthUserFile']}":
           ensure  => present,
-          mode    => 0600,
+          mode    => '0600',
         }
       } else {
-        concat { $real_options[ROOT][AuthUserFile]:
+        concat { $real_options['ROOT']['AuthUserFile']:
           owner => 'root',
           group => 'root',
           mode  => '0600',
           # accounts may be required for validate_cmd to succeed
           before => File[$::proftpd::config],
         }
-        create_resources(proftpd::account, $::proftpd::auth_users, { file => $real_options[ROOT][AuthUserFile] })
+        create_resources(proftpd::account, $::proftpd::auth_users, { file => $real_options['ROOT']['AuthUserFile'] })
       }
     }
 
@@ -53,10 +53,10 @@ class proftpd::config {
       notify  => Service[$::proftpd::service_name],
     }
 
-    if $real_options[ROOT][AuthGroupFile] {
-        file { "${real_options[ROOT][AuthGroupFile]}":
+    if $real_options['ROOT']['AuthGroupFile'] {
+        file { "${real_options['ROOT']['AuthGroupFile']}":
             ensure  => present,
-            mode    => 0600,
+            mode    => '0600',
         }
     }
 

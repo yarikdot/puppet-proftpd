@@ -2,55 +2,37 @@
 #
 class proftpd (
   # module parameters
-  $config_template    = $::proftpd::params::config_template,
-  $default_config     = $::proftpd::params::default_config,
-  $manage_config_file = $::proftpd::params::manage_config_file,
-  $package_ensure     = $::proftpd::params::package_ensure,
-  $package_manage     = $::proftpd::params::package_manage,
-  $service_manage     = $::proftpd::params::service_manage,
-  $service_enable     = $::proftpd::params::service_enable,
-  $service_ensure     = $::proftpd::params::service_ensure,
+  String  $config_template    = $::proftpd::params::config_template,
+  Boolean $default_config     = $::proftpd::params::default_config,
+  Boolean $manage_config_file = $::proftpd::params::manage_config_file,
+  String  $package_ensure     = $::proftpd::params::package_ensure,
+  Boolean $package_manage     = $::proftpd::params::package_manage,
+  Boolean $service_manage     = $::proftpd::params::service_manage,
+  Boolean $service_enable     = $::proftpd::params::service_enable,
+  String  $service_ensure     = $::proftpd::params::service_ensure,
   # os-specific parameters
-  $prefix             = $::proftpd::params::prefix,
-  $prefix_bin         = $::proftpd::params::prefix_bin,
-  $config             = $::proftpd::params::config,
-  $base_dir           = $::proftpd::params::base_dir,
-  $log_dir            = $::proftpd::params::log_dir,
-  $run_dir            = $::proftpd::params::run_dir,
-  $packages           = $::proftpd::params::packages,
-  $service_name       = $::proftpd::params::service_name,
-  $user               = $::proftpd::params::user,
-  $group              = $::proftpd::params::group,
-  $pidfile            = $::proftpd::params::pidfile,
-  $scoreboardfile     = $::proftpd::params::scoreboardfile,
+  Optional[String] $prefix             = $::proftpd::params::prefix,
+  String $prefix_bin         = $::proftpd::params::prefix_bin,
+  String $config             = $::proftpd::params::config,
+  String $base_dir           = $::proftpd::params::base_dir,
+  String $log_dir            = $::proftpd::params::log_dir,
+  String $run_dir            = $::proftpd::params::run_dir,
+  Array[String] $packages           = $::proftpd::params::packages,
+  String $service_name       = $::proftpd::params::service_name,
+  String $user               = $::proftpd::params::user,
+  String $group              = $::proftpd::params::group,
+  String $pidfile            = $::proftpd::params::pidfile,
+  String $scoreboardfile     = $::proftpd::params::scoreboardfile,
   # proftpd configuration
-  $anonymous_options  = $::proftpd::params::anonymous_options,
-  $anonymous_enable   = $::proftpd::params::anonymous_enable,
-  $default_options    = $::proftpd::params::default_options,
-  $load_modules       = $::proftpd::params::load_modules,
-  $options            = $::proftpd::params::options,
-  $auth_users         = $::proftpd::params::auth_users,
+  Hash    $anonymous_options  = $::proftpd::params::anonymous_options,
+  Boolean $anonymous_enable   = $::proftpd::params::anonymous_enable,
+  Hash    $default_options    = $::proftpd::params::default_options,
+  Hash    $load_modules       = $::proftpd::params::load_modules,
+  Hash     $options            = $::proftpd::params::options,
+  Optional[Hash] $auth_users         = $::proftpd::params::auth_users,
 ) inherits proftpd::params {
 
   include stdlib
-
-  # simple validation
-  validate_bool($anonymous_enable)
-  validate_hash($anonymous_options)
-  validate_string($config_template)
-  validate_bool($default_config)
-  validate_hash($default_options)
-  validate_hash($load_modules)
-  validate_bool($manage_config_file)
-  validate_hash($options)
-  validate_array($packages)
-  validate_bool($package_manage)
-  validate_string($package_ensure)
-  validate_bool($service_manage)
-  validate_string($service_name)
-  validate_bool($service_enable)
-  validate_string($service_ensure)
-  if $auth_users != undef { validate_hash($auth_users) }
 
   # resource relationships
   class { '::proftpd::install': } ->
